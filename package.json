@@ -1,0 +1,21 @@
+{
+  "name": "practicerepo",
+  "version": "1.0.0",
+  "description": "THis is a practice repo",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/imramkrishna/practiceRepo.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/imramkrishna/practiceRepo/issues"
+  },
+  "homepage": "https://github.com/imramkrishna/practiceRepo#readme"
+}

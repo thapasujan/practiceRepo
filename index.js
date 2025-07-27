@@ -1,126 +1,48 @@
 import express from "express";
+import {
+    getAllUsers,
+    createUser,
+    getUserById,
+    updateUser,
+    deleteUser
+} from './controllers/userController.js';
+import {
+    createProduct,
+    searchProducts
+} from './controllers/productController.js';
+import { login } from './controllers/authController.js';
+import {
+    home,
+    heavyTask,
+    getData,
+    getAsyncData
+} from './controllers/generalController.js';
+
 const app = express();
 
-const users = [
-    { id: 1, name: 'John Doe', email: 'john@example.com', password: '123456' },
-    { id: 2, name: 'Jane Smith', email: 'jane@example.com', password: 'password' }
-];
+app.get('/', home);
 
-let products = [
-    { id: 1, name: 'Laptop', price: 999.99, stock: 10 },
-    { id: 2, name: 'Phone', price: 699.99, stock: 5 }
-];
+app.get('/users', getAllUsers);
 
-app.get('/', (req, res) => {
-    res.send('Welcome to our API!');
-});
+app.post('/users', createUser);
 
-app.get('/users', (req, res) => {
-    res.json(users);
-});
+app.get('/users/:id', getUserById);
 
-app.post('/users', (req, res) => {
-    const newUser = {
-        id: users.length + 1,
-        name: req.body.name,
-        email: req.body.email,
-        password: req.body.password
-    };
-    users.push(newUser);
-    res.json(newUser);
-});
+app.put('/users/:id', updateUser);
 
-app.get('/users/:id', (req, res) => {
-    const userId = req.params.id;
-    const user = users.find(u => u.id == userId);
-    if (!user) {
-        res.status(404).send('User not found');
-        return;
-    }
-    res.json(user);
-});
+app.delete('/users/:id', deleteUser);
 
-app.put('/users/:id', (req, res) => {
-    const userId = parseInt(req.params.id);
-    const userIndex = users.findIndex(u => u.id = userId);
+app.post('/products', createProduct);
 
-    if (userIndex === -1) {
-        res.send('User not found');
-    }
+app.get('/search', searchProducts);
 
-    users[userIndex] = { ...users[userIndex], ...req.body };
-    res.json(users[userIndex]);
-});
+app.get('/heavy-task', heavyTask);
 
-app.delete('/users/:id', (req, res) => {
-    const userId = parseInt(req.params.id);
-    const userIndex = users.findIndex(u => u.id === userId);
+app.post('/login', login);
 
-    users.splice(userIndex, 1);
-    res.send('User deleted');
-});
+app.get('/api/data', getData);
 
-app.post('/products', (req, res) => {
-    const newProduct = {
-        id: products.length + 1,
-        name: req.body.name,
-        price: req.body.price,
-        stock: req.body.stock
-    };
-    products.push(newProduct);
-    res.json(newProduct);
-});
-
-app.get('/search', (req, res) => {
-    const searchTerm = req.query.q;
-    const results = products.filter(p =>
-        p.name.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-    res.json(results);
-});
-
-app.get('/heavy-task', (req, res) => {
-    let result = 0;
-    for (let i = 0; i < 1000000000; i++) {
-        result += i;
-    }
-    res.json({ result });
-});
-
-const sessions = {};
-app.post('/login', (req, res) => {
-    const { email, password } = req.body;
-    const user = users.find(u => u.email === email && u.password === password);
-
-    if (user) {
-        const sessionId = Date.now().toString();
-        sessions[sessionId] = user;
-        res.json({ sessionId, message: 'Login successful' });
-    } else {
-        res.send('Invalid credentials');
-    }
-});
-
-app.get('/api/data', (req, res) => {
-    res.json({ data: 'This will fail from browser due to CORS' });
-});
-
-app.get('/async-data', async (req, res) => {
-    try {
-        const data = await new Promise((resolve, reject) => {
-            setTimeout(() => {
-                if (Math.random() > 0.5) {
-                    resolve({ message: 'Success!' });
-                } else {
-                    reject(new Error('Random failure'));
-                }
-            }, 1000);
-        });
-        res.json(data);
-    } catch (error) {
-        console.log(error);
-    }
-});
+app.get('/async-data', getAsyncData);
 
 const PORT = 3000;
 app.listen(PORT, () => {

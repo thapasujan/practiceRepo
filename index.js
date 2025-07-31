@@ -19,6 +19,7 @@ import {
 } from './controllers/generalController.js';
 
 const app = express();
+app.use(express.json())
 
 app.get('/', home);
 

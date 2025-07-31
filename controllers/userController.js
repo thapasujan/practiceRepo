@@ -33,10 +33,11 @@ export const getUserById = (req, res) => {
 
 export const updateUser = (req, res) => {
     const userId = parseInt(req.params.id);
-    const userIndex = users.findIndex(u => u.id = userId);
+    const userIndex = users.findIndex(u => u.id == userId);
 
     if (userIndex === -1) {
-        res.send('User not found');
+        res.status(404).send('User not found');
+        return
     }
 
     users[userIndex] = { ...users[userIndex], ...req.body };

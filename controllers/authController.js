@@ -11,6 +11,6 @@ export const login = (req, res) => {
         sessions[sessionId] = user;
         res.json({ sessionId, message: 'Login successful' });
     } else {
-        res.send('Invalid credentials');
+        res.status(401).send('Invalid credentials');
     }
 };
